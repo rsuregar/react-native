@@ -25,7 +25,7 @@ export default function Login() {
     formState: { errors },
   } = useForm<LoginUser>({
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
   });
@@ -50,7 +50,7 @@ export default function Login() {
 
         <View style={tw`flex flex-col gap-4 mb-4`}>
           <Controller
-            name="email"
+            name="username"
             control={control}
             rules={{
               required: true,
@@ -58,13 +58,13 @@ export default function Login() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 autoCapitalize="none"
-                placeholder="Email Address"
+                placeholder="Username"
                 onBlur={onBlur}
                 onChangeText={onChange}
-                keyboardType="email-address"
                 value={value}
                 error={
-                  errors?.email?.type === 'required' || errors?.email?.message
+                  errors?.username?.type === 'required' ||
+                  errors?.username?.message
                 }
               />
             )}
@@ -99,13 +99,13 @@ export default function Login() {
           onPress={handleSubmit(onSubmit)}
         />
 
-        <View style={tw`flex flex-col items-center mt-8 gap-2`}>
-          <Pressable onPress={() => router.push('/register')}>
+        <View style={tw`flex flex-col items-center mt-4 gap-2`}>
+          {/* <Pressable onPress={() => router.push('/register')}>
             <Text style={tw`text-gray-900 text-xs`}>
               Don&apos;t have an account?{' '}
               <Text style={tw`font-bold`}>Sign up</Text>
             </Text>
-          </Pressable>
+          </Pressable> */}
           <Pressable onPress={() => router.push('/forgot-password')}>
             <Text style={tw`text-gray-900 text-xs`}>Forgot your password?</Text>
           </Pressable>

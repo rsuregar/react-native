@@ -31,11 +31,13 @@ const UserProfile = () => {
         <Avatar
           size="xs"
           source={{
-            uri: `https://ui-avatars.com/api/?name=${user?.name.replace(' ', '+')}&size=64"`,
+            uri: `https://ui-avatars.com/api/?name=${user?.name.replace(' ', '+')}&size=48`,
           }}
         />
-        <View style={tw`flex flex-col`}>
-          <Text style={tw`text-sm font-medium`}>{user?.name}</Text>
+        <View style={tw`flex flex-col max-w-[80%]`}>
+          <Text style={tw`text-sm font-medium whitespace-normal`}>
+            {user?.name.split(' ').slice(0, 3).join(' ')}
+          </Text>
           <Text style={tw`text-xs text-gray-500`}>View Profile</Text>
         </View>
       </Pressable>

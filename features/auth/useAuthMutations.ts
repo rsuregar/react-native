@@ -4,7 +4,7 @@ import type { Session } from '@/context/session';
 import http from '@/utils/http';
 
 export type LoginUser = {
-  email: string;
+  username: string;
   password: string;
 };
 

@@ -1,5 +1,10 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { useCallback, useEffect, useReducer } from 'react';
+// eslint-disable-next-line unused-imports/no-unused-imports
+import { Platform } from 'react-native';
 
 type UseStateHook<T> = [[boolean, T | null], (value: T | null) => void];
 
@@ -15,18 +20,52 @@ function useAsyncState<T>(
   ) as UseStateHook<T>;
 }
 
-export async function setStorageItemAsync(key: string, value: any | null) {
-  if (value == null) {
-    await SecureStore.deleteItemAsync(key);
+export async function setStorageItemAsync(
+  key: string,
+  value: any | null,
+): Promise<void> {
+  if (value === null) {
+    // If the value is null, remove the item from the appropriate storage
+    if (Platform.OS === 'web') {
+      await AsyncStorage.removeItem(key);
+    } else {
+      await SecureStore.deleteItemAsync(key);
+    }
   } else {
+    // Serialize the value before storing it
     const serializedValue = JSON.stringify(value);
-    await SecureStore.setItemAsync(key, serializedValue);
+    if (Platform.OS === 'web') {
+      await AsyncStorage.setItem(key, serializedValue);
+    } else {
+      await SecureStore.setItemAsync(key, serializedValue);
+    }
   }
 }
 
 export async function getStorageItemAsync<T>(key: string): Promise<T | null> {
-  const value = await SecureStore.getItemAsync(key);
-  return value ? JSON.parse(value) : null;
+  if (Platform.OS === 'web') {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      console.error(
+        `Error retrieving item from AsyncStorage for key "${key}":`,
+        error,
+      );
+      return null; // Return null if an error occurs
+    }
+  } else {
+    try {
+      const value = await SecureStore.getItemAsync(key);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      console.error(
+        `Error retrieving item from SecureStore for key "${key}":`,
+        error,
+      );
+      return null; // Return null if an error occurs
+    }
+  }
 }
 
 export function useStorageState<T>(key: string): UseStateHook<T> {
