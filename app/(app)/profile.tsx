@@ -57,7 +57,7 @@ export default function Profile() {
             uri: `https://ui-avatars.com/api/?name=${user?.name.replace(
               ' ',
               '+',
-            )}&size=128"`,
+            )}&size=128`,
           }}
           size="lg"
         />
